@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <link rel="stylesheet" type="text/css" href="/style.css">
+
+  <script type="text/javascript" src="/jquery-3.1.1.min.js"></script>
+  <script type="text/javascript" src="/numeral.min.js"></script>
+  <script type="text/javascript" src="https://momentjs.com/downloads/moment-with-locales.js"></script>
+  <script type="text/javascript" src="/loadRaids.js"></script>
+  <script type="text/javascript" src="/eastereggs.js"></script>
+
+  <script type="text/javascript">
+	function updateUsername(users){
+		$("#user").text("").append($('<a>').text(users.join(" & "))
+		.attr('href', "/player/?user=" + users.join(",")));
+	}
+	function updateTitle(users){
+		$("#title").text(users.join(" & "));
+	}
+	function findRealUsername(username, data){
+		return data[0].players.concat([data[0].host]).filter(function (x) { return x.toLowerCase() == username.toLowerCase(); })[0];
+	}
+	function filterByAttribute(arr, attribute) {
+	  var out = [],
+		  seen = {}
+
+	  return arr.filter(function(n) {
+		  return (seen[n[attribute]] == undefined) 
+				  && (seen[n[attribute]] = 1);
+	  })
+	}
+
+    $(function () {
+	  var users = getParameterByName("user", window.location.href).split(",");
+      var username = users[0];
+      var date = getParameterByName("date", window.location.href);
+      var latest = getParameterByName("latest", window.location.href);
+	  
+      if (username == "" || username == null) {
+        document.location = "../";
+        return;
+      }
+	  
+      updateUsername(users);
+      updateTitle(users);
+
+      if (date !== null) {
+        $.get("https://api.trials.wf/api/player/pc/" + username + "/date/" + date, function (data) {
+          username = findRealUsername(username,data);
+          $("#user").text(username);
+		  $("#title").text(username);
+          populatePlayer(data, "date");
+          scrollToHash();
+        });
+      }
+      else if (latest !== null) {
+        $.get("https://api.trials.wf/api/player/pc/" + username + "/latest/" + latest, function (data) {
+          username = findRealUsername(username,data);
+          $("#user").text(username);
+		  $("#title").text(username);
+          populatePlayer(data);
+          scrollToHash();
+        });
+      }
+      else {
+        $("#time").text("").append($("<div class='tooltip'>").text("Time")
+          .append($("<span class=\"tooltiptext\">")
+            .append($("<a>").attr("href", "/player/?user=" + username + "&sort=timelor").text("LoR"))
+            .append($("<br>"))
+            .append($("<a>").attr("href", "/player/?user=" + username + "&sort=timenm").text("NM"))
+            .append($("<br>"))
+            .append($("<a>").attr("href", "/player/?user=" + username + "&sort=timejv").text("JV"))));
+
+        $("#date").text("").append($("<a class='tooltip'>").attr("href", "/player/?user=" + username).text("Date")
+          .append($("<span class=\"tooltiptext\">")
+            .append($("<a>").attr("href", "/player/?user=" + username + "&sort=lor").text("LoR"))
+            .append($("<br>"))
+            .append($("<a>").attr("href", "/player/?user=" + username + "&sort=nm").text("NM"))
+            .append($("<br>"))
+            .append($("<a>").attr("href", "/player/?user=" + username + "&sort=jv").text("JV"))));
+			
+		
+		if (typeof jQuery.when.all === 'undefined') {
+			jQuery.when.all = function (deferreds) {
+				return $.Deferred(function (def) {
+					$.when.apply(jQuery, deferreds).then(
+						function () {
+							def.resolveWith(this, [Array.prototype.slice.call(arguments)]);
+						},
+						function () {
+							def.rejectWith(this, [Array.prototype.slice.call(arguments)]);
+						});
+				});
+			}
+}
+		
+		var dataReceival = [];
+		for(var index = 0; users.length > index; index++){
+			dataReceival.push($.get("https://api.trials.wf/api/player/pc/" + users[index] + "/completed"));
+		}
+		
+		$.when.all(dataReceival).then(function(objects) {
+			//console.log("Resolved objects:", objects);
+			data = objects[0];
+			
+			if(users.length > 1){
+				data = objects[0][0];
+				for(var index = 0; users.length > index; index++){
+					userData = objects[index][0];
+					if(userData.length > 0){
+						users[index] = findRealUsername(users[index], userData);
+						if(index != 0){
+							data = $.merge(data, userData);
+						}
+						data = filterByAttribute(data, "trialId");
+					}
+				}
+				
+			}else{
+				if(data.length > 0)
+					users[0] = findRealUsername(users[0], data);
+			}
+			
+			if(data.length > 0){
+				updateUsername(users);
+				updateTitle(users);
+				var sortBy = getParameterByName("sort", window.location.href);
+				populatePlayer(data, sortBy);
+				$('#summary').show();
+				markPersonalBest("lor");
+				markPersonalBest("lornm");
+				markPersonalBest("jv");
+				scrollToHash();
+			}else{
+				$("#user").text(username + " has no trial attempts");
+				$("#title").text("No trial attempts");
+			}
+		});
+      }
+
+      var hash = window.location.href.split('#')[1] || null;
+      if (hash !== null) {
+        var row = $('#' + hash);
+        $("html, body").animate({ scrollTop: row.offset().top }, 100);
+      }
+    });
+  </script>
+
+<link rel="icon" type="image/png" href="/img/icon.png">
+
+<title id="title">Trial Records</title>
+
+  <script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+    ga('create', 'UA-98294540-1', 'auto');
+    ga('send', 'pageview');
+
+  </script>
+</head>
+
+<body>
+  <header id="header">
+    <a href="/">Recent Trials</a> |
+    <a href="/top/nm">Top 100 NM LoR</a> |
+    <a href="/top/lor">Top 100 LoR</a> |
+    <a href="/top/jv">Top 100 JV</a>
+  </header>
+  <h1 id="user"></h1>
+  <form id="searchForm" method="get" action="/player/">
+    <input id="searchText" type="text" name="user" placeholder="Search" />
+    <input id="searchSubmit" type="submit" value="Find">
+  </form>
+  <table id="summary" style="display: none;">
+<tr>
+  <td></td>
+  <td>Best Time</td>
+  <td>Average Time</td>
+  <td>Clear Rate</td>
+  <td>Completions</td>
+</tr>
+<tr id="rowlor">
+  <td>LoR</td>
+  <td id="bestLor"></td>
+  <td id="averageLor"></td>
+  <td id="clearRateLor"></td>
+  <td id="completionsLor"></td>
+</tr>
+<tr id="rownm">
+  <td>NM LoR</td>
+  <td id="bestLorNightmare"></td>
+  <td id="averageLorNightmare"></td>
+  <td id="clearRateLorNightmare"></td>
+  <td id="completionsLorNightmare"></td>
+</tr id="rowjv">
+<tr id="rowjv">
+  <td>JV</td>
+  <td id="bestJV"></td>
+  <td id="averageJV"></td>
+  <td id="clearRateJV"></td>
+  <td id="completionsJV"></td>
+</tr>
+</table>
+<table style="width:100%" id="table">
+<tr>
+  <th>Type</th>
+  <th id="date">Date</th>
+  <th>Result</th>
+  <th id="time">Time</th>
+  <th>Objective</th>
+  <th>Kills</th>
+  <th>Deaths</th>
+  <th>Host</th>
+  <th>Players</th>
+</tr>
+</table>
+</body>
+
+</html>
