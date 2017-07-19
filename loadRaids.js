@@ -263,6 +263,7 @@ function formatTime(n) {
   if(isNaN(n) || !isFinite(n)){
     return "N/A";
   }
+  n = Math.ceil(n);
   var hours = Math.floor(n / 60 / 60),
     minutes = Math.floor((n - (hours * 60 * 60)) / 60),
     seconds = Math.round(n - (hours * 60 * 60) - (minutes * 60));
