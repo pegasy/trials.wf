@@ -126,10 +126,10 @@ function populateTable(data) {
     }
     kills.innerHTML = r.kills;
     deaths.innerHTML = r.deaths;
-    $(host).append($("<a>").attr("href", "/player/?user=" + r.host).text(r.host));
+    $(host).append($("<a>").attr("href", "{{ '/player/' | relative_url }}?user=" + r.host).text(r.host));
     $.each(r.players, function (i, p) {
       var player = $("<a>")
-        .attr("href", "/player/?user=" + p)
+        .attr("href", "{{ '/player/' | relative_url }}?user=" + p)
         .text(p);
       $(players).append(player);
       if (i < r.players.length - 1) {
@@ -234,7 +234,7 @@ function markPersonalBest(type) {
   var top = $(sorted[0]);
   var objective = top.children('.objective');
   var img = $('<img>')
-    .attr('src', '/assets/images/star.png')
+    .attr('src', "{{ '/assets/images/star.png' | relative_url }}")
     .attr('height', '19px')
     .attr('title', 'Personal Best');
   objective.append(img);

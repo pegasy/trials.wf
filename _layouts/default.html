@@ -34,10 +34,14 @@
 <body>
   <section class="page-header">
     <header id="header">
-      <a href="/">Recent Trials</a> |
-      <a href="/top/lor">Top 100 LoR</a> |
-      <a href="/top/lornm">Top 100 NM LoR</a> |
-      <a href="/top/jv">Top 100 JV</a> | Monthly Leaderboard (<a href="/top/monthly/lor">LoR</a> | <a href="/top/monthly/lornm">LoR NM</a>      | <a href="/top/monthly/jv">JV</a>)
+      <a href="{{ '/' | relative_url}">Recent Trials</a> |
+      <a href="{{ '/top/lor' | relative_url }}">Top 100 LoR</a> |
+      <a href="{{ '/top/lornm' | relative_url }}">Top 100 NM LoR</a> |
+      <a href="{{ '/top/jv' | relative_url }}">Top 100 JV</a> | Monthly Leaderboard (
+        <a href="{{ '/top/monthly/lor' | relative_url }}">LoR</a> |
+        <a href="{{ '/top/monthly/lornm' | relative_url }}">LoR NM</a>      |
+        <a href="{{ '/top/monthly/jv' | relative_url }}">JV</a>
+      )
       <div style="float:right;">
         <a href="https://trials.wf">PC</a> |
         <a href="https://ps4.trials.wf">PS4</a> |
