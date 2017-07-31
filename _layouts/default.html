@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="UTF-8">
+  <title>{{ page.title | default: site.title }}</title>
+  <meta name="description" content="{{ page.description | default: site.description }}"
+  />
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+   <link rel="icon" type="image/png" href="{{'/assets/images/icon.png'}}">
+
+  <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,700' rel='stylesheet' type='text/css'>
+  <link rel="stylesheet" href="{{ '/assets/css/style.css?v=' | append: site.github.build_revision | relative_url }}">
+
+  <script type="text/javascript" src="{{ '/assets/js/jquery-3.1.1.min.js' }}"></script>
+  <script type="text/javascript" src="{{ '/assets/js/numeral.min.js' }}"></script>
+  <script type="text/javascript" src="{{ '/assets/js/loadRaids.js' }}"></script>
+  <script type="text/javascript" src="https://momentjs.com/downloads/moment-with-locales.js"></script>
+  {% if site.google_analytics %}
+  <script>
+    (function (i, s, o, g, r, a, m) {
+      i['GoogleAnalyticsObject'] = r; i[r] = i[r] || function () {
+        (i[r].q = i[r].q || []).push(arguments)
+      }, i[r].l = 1 * new Date(); a = s.createElement(o),
+        m = s.getElementsByTagName(o)[0]; a.async = 1; a.src = g; m.parentNode.insertBefore(a, m)
+    })(window, document, 'script', 'https://www.google-analytics.com/analytics.js', 'ga');
+
+    ga('create', '{{site.google_analytics}}', 'auto');
+    ga('send', 'pageview');
+  </script>
+{% endif %}
+</head>
+
+<body>
+  <section class="page-header">
+    <header id="header">
+      <a href="/">Recent Trials</a> |
+      <a href="/top/lor">Top 100 LoR</a> |
+      <a href="/top/lornm">Top 100 NM LoR</a> |
+      <a href="/top/jv">Top 100 JV</a> | Monthly Leaderboard (<a href="/top/monthly/lor">LoR</a> | <a href="/top/monthly/lornm">LoR NM</a>      | <a href="/top/monthly/jv">JV</a>)
+      <div style="float:right;">
+        <a href="https://trials.wf">PC</a> |
+        <a href="https://ps4.trials.wf">PS4</a> |
+        <a href="https://xb1.trials.wf">XB1</a>
+      </div>
+    </header>
+    <h1 id="user">{{page.title}}</h1>
+    <form id="searchForm" method="get" action="/player/">
+      <input id="searchText" type="text" name="user" placeholder="Search" />
+      <input id="searchSubmit" type="submit" value="Find">
+    </form>
+  </section>
+
+  <section class="main-content">
+    <table id="summary" style="display: none;">
+      <tr>
+        <td></td>
+        <td>Best Time</td>
+        <td>Average Time</td>
+        <td>Clear Rate</td>
+        <td>Completions</td>
+      </tr>
+      <tr id="rowlor">
+        <td>LoR</td>
+        <td id="bestLor"></td>
+        <td id="averageLor"></td>
+        <td id="clearRateLor"></td>
+        <td id="completionsLor"></td>
+      </tr>
+      <tr id="rownm">
+        <td>NM LoR</td>
+        <td id="bestLorNightmare"></td>
+        <td id="averageLorNightmare"></td>
+        <td id="clearRateLorNightmare"></td>
+        <td id="completionsLorNightmare"></td>
+      </tr id="rowjv">
+      <tr id="rowjv">
+        <td>JV</td>
+        <td id="bestJV"></td>
+        <td id="averageJV"></td>
+        <td id="clearRateJV"></td>
+        <td id="completionsJV"></td>
+      </tr>
+    </table>
+    <table style="width:100%" id="table">
+      <tr>
+        <th>Type</th>
+        <th id="date">Date</th>
+        <th>Result</th>
+        <th id="time">Time</th>
+        <th>Objective</th>
+        <th>Kills</th>
+        <th>Deaths</th>
+        <th>Host</th>
+        <th>Players</th>
+      </tr>
+    </table>
+    {{ content }}
+
+    <footer class="site-footer">
+    </footer>
+  </section>
+</body>
+</html>

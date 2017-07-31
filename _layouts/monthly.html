@@ -1,0 +1,25 @@
+---
+layout: default
+---
+<script type="text/javascript">
+  function toDate(date) {
+    return date.getFullYear() + "-" + date.getMonth() + "-" + date.getDay() + "Z";
+  }
+  $(function () {
+    $("#user").text("{{ page.title }}");
+
+    var date = new Date(), y = date.getFullYear(), m = date.getMonth();
+    var firstDay = new Date(y, m, 1);
+    var lastDay = new Date(y, m + 1, 0);
+
+    console.log(firstDay);
+    console.log(lastDay);
+
+    var leaderboardType = "Monthly";
+
+    $.get("https://api.trials.wf/api/trial/" + getPlatform() + "/{{ page.trialtype }}/top/100/from=" + firstDay.toJSON() + "&to=" + lastDay.toJSON(), function (data) {
+      var sorted = data.sort(function (a, b) { return (a.time < b.time) ? -1 : ((b.time < a.time) ? 1 : 0); });
+      populateTable(data);
+    });
+  });
+</script>
