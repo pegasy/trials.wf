@@ -1,3 +1,5 @@
+---
+---
 
 function getPlatform() {
   let platform = "pc";
