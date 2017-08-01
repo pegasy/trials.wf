@@ -7,13 +7,13 @@ layout: default
   }
   $(function () {
     $("#user").text("{{ page.title }}");
+    var date = new Date();
+    var y = date.getUTCFullYear(), m = date.getUTCMonth();
+    var firstDay = new Date(Date.UTC(y, m, 1));
+    var lastDay = new Date(Date.UTC(y, m + 1, 1));
 
-    var date = new Date(), y = date.getFullYear(), m = date.getMonth();
-    var firstDay = new Date(y, m, 1);
-    var lastDay = new Date(y, m + 1, 0);
-
-    console.log(firstDay);
-    console.log(lastDay);
+    console.log(firstDay.toJSON());
+    console.log(lastDay.toJSON());
 
     var leaderboardType = "Monthly";
 
@@ -22,4 +22,5 @@ layout: default
       populateTable(data);
     });
   });
+
 </script>
