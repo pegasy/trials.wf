@@ -7,7 +7,7 @@ layout: default
             .attr('href', "/player/?user=" + users.join(",")));
     }
     function updateTitle(users) {
-        $("#title").text(users.join(" & "));
+        // $("#title").text(users.join(" & "));
     }
     function findRealUsername(username, data) {
         return data[0].players.concat([data[0].host]).filter(function (x) { return x.toLowerCase() == username.toLowerCase(); })[0];

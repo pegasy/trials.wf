@@ -107,20 +107,21 @@ function populateTable(data) {
       type.innerHTML = "JV";
     }
 
-    var leaderboardGeneratedSeconds = new Date(r.leaderboardGenerated).getTime() / 1000;
+    var leaderboardGenerated = new Date(r.leaderboardGenerated);
 
 
     $(row).attr('data-time', timeToSeconds(r.time));
     $(row).attr('data-type', r.type);
     $(row).attr('data-objective', r.objective);
-    $(row).attr('id', r.trialId);
-    //$(date).append($('<a>').attr('href', '/player/?user=' + r.host + '&date=' + r.leaderboardGenerated + '#' + hostNice + '_' + leaderboardGeneratedSeconds).text(formatDate(r.leaderboardGenerated)));
-    // $(date).append($('<a>').attr('href', '/player/?user=' + r.host + '&date=' + r.leaderboardGenerated + '#' + hostNice + '_' + leaderboardGeneratedSeconds).text(formatDate(r.leaderboardGenerated)));
-    $(date).text(formatDate(r.leaderboardGenerated));
+
+    var trialId = r.trialId.replace(/\W/g, '');
+    $(row).attr('id', trialId);
+
+    var dateLink = $('<a>').attr('href', '/player/?user=' + r.host + '&date=' + moment.utc(leaderboardGenerated).format("YYYY-MM-DD") + 'Z' + '#' + trialId).text(formatDate(r.leaderboardGenerated));
+    $(date).append(dateLink);
 
     objective.className = 'objective';
 
-    //date.innerHTML = formatDate(r.leaderboardGenerated);
     result.innerHTML = r.objective;
     time.innerHTML = r.time;
     if (r.objective != "VICTORY") {
