@@ -300,7 +300,7 @@ function timeToSeconds(time) {
 }
 
 function formatDate(date) {
-  return moment.utc(date).format("YYYY-MM-DD HH:mm");
+  return moment.utc(date).format("YYYY-MM-DD HH:mm:ss");
 }
 
 
