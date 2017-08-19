@@ -6,9 +6,6 @@ layout: default
         $("#user").text("").append($('<a>').text(users.join(" & "))
             .attr('href', "/player/?user=" + users.join(",")));
     }
-    function updateTitle(users) {
-        // $("#title").text(users.join(" & "));
-    }
     function findRealUsername(username, data) {
         return data[0].players.concat([data[0].host]).filter(function (x) { return x.toLowerCase() == username.toLowerCase(); })[0];
     }
@@ -32,29 +29,29 @@ layout: default
             document.location = "../";
             return;
         }
-
         updateUsername(users);
-        updateTitle(users);
 
         if (date !== null) {
             $.get("https://api.trials.wf/api/player/" + getPlatform() + "/" + username + "/date/" + date, function (data) {
                 username = findRealUsername(username, data);
-                $("#user").text(username);
-                $("#title").text(username);
+                //$("#user").text(username);
                 populatePlayer(data, "date");
                 scrollToHash();
             });
         }
         else if (latest !== null) {
-            $.get("https://api.trials.wf/api/player/" + getPlatform() + "/" + username + "/latest/" + latest, function (data) {
-                username = findRealUsername(username, data);
-                $("#user").text(username);
-                $("#title").text(username);
-                populatePlayer(data);
-                scrollToHash();
-            });
+            setInterval(function () {
+                $.get("https://api.trials.wf/api/player/" + getPlatform() + "/" + username + "/latest/" + latest, function (data) {
+                    username = findRealUsername(username, data);
+                    //$("#user").text(username);
+                    populatePlayer(data);
+                });
+            }, 5000);
         }
         else {
+            if(users.length == 1){
+                $("<span style=\"font-size:0.6em;\"> (<a href=\"" + window.location.href +"&latest=100\">latest checkpoints</a>)</span>").insertAfter($("#user a"))
+            }
             $("#time").text("").append($("<div class='tooltip'>").text("Time")
                 .append($("<span class=\"tooltiptext\">")
                     .append($("<a>").attr("href", "/player/?user=" + username + "&sort=timelor").text("LoR"))
@@ -115,7 +112,10 @@ layout: default
 
                 if (data.length > 0) {
                     updateUsername(users);
-                    updateTitle(users);
+                    
+                    if(users.length == 1){
+                        $("<span style=\"font-size:0.6em;\"> (<a href=\"" + window.location.href +"&latest=100\">latest checkpoints</a>)</span>").insertAfter($("#user a"))
+                    }
                     var sortBy = getParameterByName("sort", window.location.href);
                     populatePlayer(data, sortBy);
                     $('#summary').show();
