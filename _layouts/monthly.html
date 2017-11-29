@@ -2,25 +2,60 @@
 layout: default
 ---
 <script type="text/javascript">
-  function toDate(date) {
-    return date.getFullYear() + "-" + date.getMonth() + "-" + date.getDay() + "Z";
-  }
+
+  var enumerateDaysBetweenDates = function (startDate, endDate) {
+    var dates = [];
+
+    var currDate = moment(startDate).startOf('day').add(-1, 'months');
+    var lastDate = moment(endDate).startOf('day');
+
+    while (currDate.add(1, 'months').diff(lastDate) < 0) {
+      //console.log(currDate.toISOString());
+      dates.push(currDate.clone().toDate());
+    }
+
+    return dates;
+  };
   $(function () {
-    $("#user").text("{{ page.title }}");
-    var date = new Date();
-    var y = date.getUTCFullYear(), m = date.getUTCMonth();
-    var firstDay = new Date(Date.UTC(y, m, 1));
-    var lastDay = new Date(Date.UTC(y, m + 1, 1));
 
-    console.log(firstDay.toJSON());
-    console.log(lastDay.toJSON());
+    $('#user').click(() => {
+      $('#monthSelect').toggleClass('show');
+    });
+    
 
-    var leaderboardType = "Monthly";
+    trackingStartDate = moment.parseZone('2015-09-01T00:00Z');
+    dates = enumerateDaysBetweenDates(trackingStartDate, new Date()).reverse();
 
-    $.get("https://api.trials.wf/api/trial/" + getPlatform() + "/{{ page.trialtype }}/top/100/from=" + firstDay.toJSON() + "&to=" + lastDay.toJSON(), function (data) {
+    //console.log(dates);
+
+
+    dates.forEach(dt => {
+      var m = moment(dt).utc();
+      //var queryString = "?dateStart=" + m.format("YYYY-MM-DD") + "&dateStop=" + m.clone().add(1, 'months').format("YYYY-MM-DD");
+      var queryString = "?date=" + m.format("YYYY-MM");
+      var p = $("<a>").text(m.format("YYYY-MM")).attr("href", queryString);
+      $("#monthSelect").append(p);
+    });
+
+    var dateStart = getParameterByName("date");
+
+
+    if(!dateStart){
+      dateStart = dates[0];
+    }
+    dateStart = moment.tz(dateStart, 'UTC').utc();
+
+    $('#user').text("Monthly leaderboard for {{page.title}} (" + dateStart.format("YYYY-MM") + ")");
+
+    var dateStop = dateStart.clone().add(1, 'months');
+
+    //console.log("Date: " + dateStart.toISOString() + " - " + moment(dateStop).toISOString());
+
+    var url = "https://api.trials.wf/api/trial/" + getPlatform() + "/{{ page.trialtype }}/top/100/from=" + dateStart.toISOString() + "&to=" + moment(dateStop).toISOString();
+    $.get(url, function (data) {
       var sorted = data.sort(function (a, b) { return (a.time < b.time) ? -1 : ((b.time < a.time) ? 1 : 0); });
       populateTable(data);
     });
-  });
 
+  });
 </script>

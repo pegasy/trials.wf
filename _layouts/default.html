@@ -16,6 +16,7 @@
   <script type="text/javascript" src="{{ '/assets/js/numeral.min.js' | relative_url }}"></script>
   <script type="text/javascript" src="{{ '/assets/js/loadRaids.js' | relative_url }}"></script>
   <script type="text/javascript" src="https://momentjs.com/downloads/moment-with-locales.js"></script>
+  <script type="text/javascript" src="https://momentjs.com/downloads/moment-timezone-with-data.min.js"></script>
   {% if site.google_analytics %}
   <script>
     (function (i, s, o, g, r, a, m) {
@@ -28,7 +29,7 @@
     ga('create', '{{site.google_analytics}}', 'auto');
     ga('send', 'pageview');
   </script>
-{% endif %}
+  {% endif %}
 </head>
 
 <body>
@@ -37,22 +38,27 @@
       <a href="{{ '/' | relative_url }}">Recent Trials</a> |
       <a href="{{ '/top/lor' | relative_url }}">Top 100 LoR</a> |
       <a href="{{ '/top/lornm' | relative_url }}">Top 100 NM LoR</a> |
-      <a href="{{ '/top/jv' | relative_url }}">Top 100 JV</a> | Monthly Leaderboard (
+      <a href="{{ '/top/jv' | relative_url }}">Top 100 JV</a> | Monthly Leaderboards (
         <a href="{{ '/top/monthly/lor' | relative_url }}">LoR</a> |
         <a href="{{ '/top/monthly/lornm' | relative_url }}">LoR NM</a>      |
         <a href="{{ '/top/monthly/jv' | relative_url }}">JV</a>
       )
       <div style="float:right;">
+        <a href="https://discord.gg/VPCFYku" style="margin-right: 2em" title="Not much here atm, join for discussing changes / suggestions / changelog">Discord for trials.wf</a>
         <a href="https://trials.wf">PC</a> |
         <a href="https://ps4.trials.wf">PS4</a> |
         <a href="https://xb1.trials.wf">XB1</a>
       </div>
     </header>
-    <h1 id="user">{{page.title}}</h1>
     <form id="searchForm" method="get" action="/player/">
       <input id="searchText" type="text" name="user" placeholder="Search" />
       <input id="searchSubmit" type="submit" value="Find">
     </form>
+    <h1 id="user">{{page.title}}</h1>
+    <div class="dropdown">
+      <div id="monthSelect" class="dropdown-content" />
+    </div>
+   
   </section>
 
   <section class="main-content">
