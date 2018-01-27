@@ -2,3 +2,6 @@ title: trials.wf
 google_analytics: UA-98294540-1
 permalink: pretty
 theme: 
+base_api_url: https://devapi.trials.wf
+#base_api_url: https://api.trials.wf
+#base_api_url: http://localhost:5000
