@@ -40,6 +40,11 @@ layout: default
             });
         }
         else if (latest !== null) {
+            $.get("{{ site.base_api_url }}/api/player/" + getPlatform() + "/" + username + "/latest/" + latest, function (data) {
+                    username = findRealUsername(username, data);
+                    //$("#user").text(username);
+                    populatePlayer(data);
+                });
             setInterval(function () {
                 $.get("{{ site.base_api_url }}/api/player/" + getPlatform() + "/" + username + "/latest/" + latest, function (data) {
                     username = findRealUsername(username, data);
