@@ -32,7 +32,7 @@ layout: default
         updateUsername(users);
 
         if (date !== null) {
-            $.get("https://api.trials.wf/api/player/" + getPlatform() + "/" + username + "/date/" + date, function (data) {
+            $.get("{{ site.base_api_url }}/api/player/" + getPlatform() + "/" + username + "/date/" + date, function (data) {
                 username = findRealUsername(username, data);
                 //$("#user").text(username);
                 populatePlayer(data, "date");
@@ -40,8 +40,13 @@ layout: default
             });
         }
         else if (latest !== null) {
+            $.get("{{ site.base_api_url }}/api/player/" + getPlatform() + "/" + username + "/latest/" + latest, function (data) {
+                    username = findRealUsername(username, data);
+                    //$("#user").text(username);
+                    populatePlayer(data);
+                });
             setInterval(function () {
-                $.get("https://api.trials.wf/api/player/" + getPlatform() + "/" + username + "/latest/" + latest, function (data) {
+                $.get("{{ site.base_api_url }}/api/player/" + getPlatform() + "/" + username + "/latest/" + latest, function (data) {
                     username = findRealUsername(username, data);
                     //$("#user").text(username);
                     populatePlayer(data);
@@ -85,7 +90,7 @@ layout: default
 
             var dataReceival = [];
             for (var index = 0; users.length > index; index++) {
-                dataReceival.push($.get("https://api.trials.wf/api/player/" + getPlatform() + "/" + users[index] + "/completed"));
+                dataReceival.push($.get("{{ site.base_api_url }}/api/player/" + getPlatform() + "/" + users[index] + "/completed"));
             }
 
             $.when.all(dataReceival).then(function (objects) {

@@ -51,7 +51,7 @@ layout: default
 
     //console.log("Date: " + dateStart.toISOString() + " - " + moment(dateStop).toISOString());
 
-    var url = "https://api.trials.wf/api/trial/" + getPlatform() + "/{{ page.trialtype }}/top/100/from=" + dateStart.toISOString() + "&to=" + moment(dateStop).toISOString();
+    var url = "{{ site.base_api_url }}/api/trial/" + getPlatform() + "/{{ page.trialtype }}/top/100/" + dateStart.format("YYYYMM");
     $.get(url, function (data) {
       var sorted = data.sort(function (a, b) { return (a.time < b.time) ? -1 : ((b.time < a.time) ? 1 : 0); });
       populateTable(data);
