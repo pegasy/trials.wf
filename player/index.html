@@ -57,7 +57,7 @@ layout: default
             if(users.length == 1){
                 $("<span style=\"font-size:0.6em;\"> (<a href=\"" + window.location.href +"&latest=100\">latest checkpoints</a>)</span>").insertAfter($("#user a"))
             }
-            $("#time").text("").append($("<div class='tooltip'>").text("Time")
+            $("#time").text("").append($("<div class='tooltip'>").text("Time ▼")
                 .append($("<span class=\"tooltiptext\">")
                     .append($("<a>").attr("href", "/player/?user=" + username + "&sort=timelor").text("LoR"))
                     .append($("<br>"))
@@ -65,7 +65,7 @@ layout: default
                     .append($("<br>"))
                     .append($("<a>").attr("href", "/player/?user=" + username + "&sort=timejv").text("JV"))));
 
-            $("#date").text("").append($("<a class='tooltip'>").attr("href", "/player/?user=" + username).text("Date")
+            $("#date").text("").append($("<a class='tooltip'>").attr("href", "/player/?user=" + username).text("Date ▼")
                 .append($("<span class=\"tooltiptext\">")
                     .append($("<a>").attr("href", "/player/?user=" + username + "&sort=lor").text("LoR"))
                     .append($("<br>"))
