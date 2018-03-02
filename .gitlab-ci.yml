@@ -1,0 +1,17 @@
+image: docker:latest
+
+variables:
+  CONTAINER_IMAGE: $CI_REGISTRY_IMAGE/${CI_COMMIT_REF_NAME}:$CI_BUILD_BEFORE_SHA
+  CONTAINER_IMAGE_LATEST: $CI_REGISTRY_IMAGE/${CI_COMMIT_REF_NAME}:latest
+
+before_script:
+  - docker login -u gitlab-ci-token -p $CI_BUILD_TOKEN registry.gitlab.com
+
+build_image:
+  script:
+    - docker pull microsoft/dotnet:2.0-sdk
+    - docker pull microsoft/dotnet:2.0-runtime
+    - docker build -t $CONTAINER_IMAGE .
+    - docker push $CONTAINER_IMAGE
+    - docker tag $CONTAINER_IMAGE $CONTAINER_IMAGE_LATEST
+    - docker push $CONTAINER_IMAGE_LATEST
