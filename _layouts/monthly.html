@@ -24,7 +24,9 @@ layout: default
     
 
     trackingStartDate = moment.parseZone('2015-09-01T00:00Z');
-    dates = enumerateDaysBetweenDates(trackingStartDate, new Date()).reverse();
+    endDate = moment.parseZone('2018-03-10T00:00Z');
+    //dates = enumerateDaysBetweenDates(trackingStartDate, new Date()).reverse();
+    dates = enumerateDaysBetweenDates(trackingStartDate, endDate).reverse();
 
     //console.log(dates);
 
